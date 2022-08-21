@@ -8,6 +8,7 @@ import javax.validation.constraints.*;
 
 @Data
 public class Film {
+    @PositiveOrZero
     private int id;
     @NonNull
     private String name;
