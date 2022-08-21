@@ -10,7 +10,6 @@ import javax.validation.constraints.*;
 public class Film {
     @PositiveOrZero
     private int id;
-    @NonNull
     private String name;
     @Size(max = 200, message = "Максимальная длина описания 200 символов.")
     private String description;

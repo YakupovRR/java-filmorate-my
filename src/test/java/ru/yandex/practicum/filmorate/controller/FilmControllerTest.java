@@ -1,33 +1,78 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
+    private Film film;
+    private FilmController controller;
+
+    @BeforeEach
+    protected void beforeEach() {
+        controller = new FilmController();
+        film = new Film();
+        film.setName("Фильм 1");
+        film.setDescription("Описание");
+        film.setReleaseDate(LocalDate.of(2000, 01, 01));
+        film.setDuration(100);
+    }
 
     @Test
-    void validateFilm() {
-        FilmController fc = new FilmController();
-        Film film = new Film("Дом дракона");
-        film.setDescription("Члены дома Таргариенов оставляют обреченную Валирию и отправляются на запад," +
-                " где обнаруживают огромную территорию, населенную враждующими королевствами.\n");
-        film.setReleaseDate(LocalDate.of(1895, 12, 28));
-        film.setDuration(90);
+    @DisplayName("название фильма null")
+    protected void validateNameNullTest() {
+        film.setName(null);
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        assertEquals("Название фильма не указано.", ex.getMessage());
+    }
 
-        assertAll(
-                () -> assertNotNull(film),
-                () -> assertNotNull(film.getName(), "Имя фильма не пустое"),
-                () -> assertFalse(film.getName().isEmpty(), "Имя фильма не пустое"),
-                () -> assertTrue(film.getDescription().length() <= 200,
-                        "Длина описания не превышает 200 символов"),
-                () -> assertTrue(film.getReleaseDate().isAfter(LocalDate.of(1895, 12, 27)),
-                        "Дата релиза не раньше 28 декабря 1895 года")
-        );
+    @Test
+    @DisplayName("название фильма пустое")
+    protected void validateNameTest() {
+        film.setName("");
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        assertEquals("Название фильма не указано.", ex.getMessage());
+    }
+    @Test
+    @DisplayName("описание больше 200 символов")
+    protected void validateDescriptionMore200Test() {
+        film.setDescription("Сериал рассказывает о событиях на вымышленном континенте Вестерос, происходивших примерно" +
+                " за 200 лет до событий «Игры престолов». Сюжет сконцентрирован на «Пляске Драконов» — гражданской" +
+                " войне (129—131 год от Завоевания Эйегона I), причиной которой является борьба между двумя ветвями" +
+                " дома Таргариенов. «Пляска» началась после смерти Визериса I, когда принцесса Рейенира, поддержанная" +
+                " партией «чёрных», и принц Эйегон, поддержанный партией «зелёных», одновременно объявили о своих" +
+                " правах на Железный трон.");
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        assertEquals("Описание фильма не должно быть более 200 символов.", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("id отрицательный")
+    protected void validateIdTest() {
+        film.setId(-1);
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        assertEquals("id не может быть меньше 0.", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("продолжительность отрицательная")
+    protected void validateDurationTest() {
+        film.setDuration(-10);
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        assertEquals("Продолжительность фильма не может быть отрицательной.", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("релиз раньше 28 декабря 1895 года")
+    protected void validateReleaseTest() {
+        film.setReleaseDate(LocalDate.of(1745, 11,1));
+        Exception exception = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        assertEquals("Дата релиза не может быть раньше 28 декабря 1895 года.", exception.getMessage());
     }
 }
