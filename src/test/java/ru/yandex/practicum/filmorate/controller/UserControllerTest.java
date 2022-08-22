@@ -19,7 +19,7 @@ class UserControllerTest {
         user.setName("");
         user.setEmail("user@yandex.ru");
         user.setLogin("User1");
-        user.setBirthday(LocalDate.of(1995, 11, 1));
+        user.setBirthday(LocalDate.now().minusYears(20));
 
         assertAll(
                 () -> assertNotNull(user),
