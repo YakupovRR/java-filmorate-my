@@ -29,7 +29,7 @@ class UserControllerTest {
                 () -> assertNotNull(user.getLogin(), "Логин пользователя не пуст"),
                 () -> assertFalse(user.getLogin().contains(" "), "Логин не содержит пробелов"),
                 () -> assertTrue(user.getBirthday().isBefore(LocalDate.now()),
-                        "Дата рождения не в будущем")
+                        "Дата рождения не может быть позже текущей.")
         );
     }
 }

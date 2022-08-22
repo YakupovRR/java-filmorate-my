@@ -12,7 +12,7 @@ class FilmControllerTest {
     @Test
     void validateFilm() {
         Film film = new Film("Дом дракона");
-        film.setDescription("«ТСериал рассказывает о событиях на вымышленном континенте Вестерос, " +
+        film.setDescription("«Сериал рассказывает о событиях на вымышленном континенте Вестерос, " +
                 "происходивших примерно за 200 лет до событий «Игры престолов». ");
         film.setReleaseDate(LocalDate.of(1895, 12, 28));
         film.setDuration(90);

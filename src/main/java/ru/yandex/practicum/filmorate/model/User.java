@@ -15,7 +15,7 @@ public class User {
     @NotNull(message = "Логин пользователя не может быть пустым.")
     @NotBlank(message = "Логин пользователя не может быть пустым.")
     private String login;
-
+    @NotNull
     private String name;
     @Past(message = "Дата рождения не может быть позже текущей.")
     private LocalDate birthday;
