@@ -20,7 +20,7 @@ public class UserValidator {
 
         if (user.getName().isEmpty()) {
             user.setName(user.getLogin());
-            log.info("Имя для отображения пустое, будет использован логин.");
+            log.info("Имя для отображения пустое, в качестве имени будет использован логин.");
         }
 
         return true;
@@ -30,12 +30,12 @@ public class UserValidator {
     private boolean emailValidator(String email) throws ValidationException {
 
         if (!StringUtils.hasText(email)) {
-            log.info("Мыло пустое.");
+            log.info("Пустой адрес электронной почты");
             throw new ValidationException("E-mail не может быть пустым.");
         }
 
         if (!email.contains("@")) {
-            log.info("Неправильный формат мыла.");
+            log.info("Неправильный формат электронной почты.");
             throw new ValidationException("E-mail должен содержать символ \"@\".");
         }
 
@@ -51,7 +51,7 @@ public class UserValidator {
 
         if (login.contains(" ")) {
             log.info("Логин с пробелами.");
-            throw new ValidationException("Логин не может содержать пробелы.");
+            throw new ValidationException("Логин не должен содержать пробелов");
         }
 
         return true;
@@ -62,7 +62,7 @@ public class UserValidator {
 
         if (birthdate.isAfter(LocalDate.now())) {
             log.info("Дата рождения позже текущей.");
-            throw new ValidationException("Дата рождения не может быть позже настоящей!");
+            throw new ValidationException("Дата рождения не может быть позже текущей");
         }
 
         return true;
