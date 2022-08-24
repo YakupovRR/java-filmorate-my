@@ -65,7 +65,7 @@ public class UserController {
         }
         if (user.getId() < 0) {
             log.debug("id отрицателен");
-            throw new ValidationException("Id не может быть отрицательным.");
+            throw new ValidationException("id не может быть отрицательным.");
         }
     }
 }
