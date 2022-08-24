@@ -1,22 +1,19 @@
 package ru.yandex.practicum.filmorate.model;
-import java.time.LocalDate;
 
 import lombok.Data;
-import lombok.NonNull;
-import javax.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 public class Film {
-    private int id;
-    @NonNull
-    private String name;
-    @Size(max = 200, message = "Максимальная длина описания 200 символов.")
-    private String description;
-    @PastOrPresent(message = "Дата релиза не должна быть позже текущей.")
-    private LocalDate releaseDate;
-    @PositiveOrZero(message = "Продолжительность фильма должна быть больше 0.")
-    private int duration;
 
+    private final int id;
+    private final String name;
+    private final String description;
+    private final LocalDate releaseDate;
+    private final int duration;
 
 }

@@ -2,57 +2,52 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import org.apache.commons.lang3.StringUtils;
+import ru.yandex.practicum.filmorate.validators.UserValidator;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 @RestController
-@Slf4j
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
-    private final Map<Integer, User> users = new HashMap<>();
 
-    @GetMapping
-    public Collection<User> findAll() {
-        return users.values();
-    }
+    private Map<String, User> users = new ConcurrentHashMap<>();
+
+    private UserValidator userValidator = new UserValidator();
 
     @PostMapping
-    public User createUser(@RequestBody @Valid User user) {
-        user.setId(users.size() + 1);
-        validate(user);
-        if(StringUtils.isBlank(user.getName())) {
-            user.setName(user.getLogin());
-        }
-        users.put(user.getId(), user);
-        log.info("Добавлен новый пользователь: '{}', ID '{}', '{}'", user.getName(), user.getId(), user.getEmail());
-        return user;
+    public User createUser(@RequestBody User user) throws ValidationException {
+
+        userValidator.isValid(user);
+
+        users.put(user.getEmail(), user);
+
+        log.info("Создание пользователя - {}", user.getEmail());
+
+        return users.get(user.getEmail());
     }
 
     @PutMapping
-    public User updateUser(@RequestBody @Valid User user) {
-        if(users.containsKey(user.getId())) {
-            validate(user);
-            if (StringUtils.isBlank(user.getName())) {
-                user.setName(user.getLogin());
-            }
-            users.put(user.getId(), user);
-            log.info("Внесены изменения в данные пользователя: '{}', ID '{}', '{}'",
-                    user.getName(), user.getId(), user.getEmail());
-            return user;
-        } else {
-            throw new RuntimeException("Пользователь с данным Id  не найден");
-        }
+    public void updateUser(@RequestBody User user) throws ValidationException {
+
+        userValidator.isValid(user);
+
+        users.put(user.getEmail(), user);
+
+        log.info("Обновление пользователя - {}", user.getEmail());
+
     }
 
-    void validate(User user) {
-        if(user.getLogin().contains(" ")) {
-            throw new RuntimeException("Логин содержит пробелы.");
-        }
-        log.info("Проведена валидация данных пользователя: '{}'", user);
+    @GetMapping
+    public List<User> findAll() {
+
+        return new ArrayList<>(users.values());
+
     }
+
 }
