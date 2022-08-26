@@ -28,7 +28,7 @@ class FilmControllerTest {
     @DisplayName("название фильма null")
     protected void validateNameNullTest() {
         film.setName(null);
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateFilm(film));
         assertEquals("Название фильма не указано.", ex.getMessage());
     }
 
@@ -36,7 +36,7 @@ class FilmControllerTest {
     @DisplayName("название фильма пустое")
     protected void validateNameTest() {
         film.setName("");
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateFilm(film));
         assertEquals("Название фильма не указано.", ex.getMessage());
     }
     @Test
@@ -45,7 +45,7 @@ class FilmControllerTest {
         film.setDescription("Пятеро друзей ( комик-группа «Шарло»), приезжают в город Бризуль. Здесь они хотят" +
                 " разыскать господина Огюста Куглова, который задолжал им деньги, а именно 20 миллионов. о Куглов, " +
                 "который за время «своего отсутствия», стал кандидатом Коломбани.");
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateFilm(film));
         assertEquals("Описание фильма не должно превышать 200 символов.", ex.getMessage());
     }
 
@@ -53,7 +53,7 @@ class FilmControllerTest {
     @DisplayName("id отрицательный")
     protected void validateIdTest() {
         film.setId(-1);
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateFilm(film));
         assertEquals("id не может быть отрицательным.", ex.getMessage());
     }
 
@@ -61,7 +61,7 @@ class FilmControllerTest {
     @DisplayName("продолжительность отрицательная")
     protected void validateDurationTest() {
         film.setDuration(-10);
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateFilm(film));
         assertEquals("Продолжительность фильма не может быть отрицательной.", ex.getMessage());
     }
 
@@ -69,7 +69,7 @@ class FilmControllerTest {
     @DisplayName("релиз раньше 20 декабря 1895 года")
     protected void validateReleaseTest() {
         film.setReleaseDate(LocalDate.of(1890, 03,25));
-        Exception exception = assertThrows(ValidationException.class, () -> controller.validateFilm(film));
+        Exception exception = assertThrows(ValidationException.class, () -> controller.validate.validateFilm(film));
         assertEquals("Дата релиза не может быть раньше 28 декабря 1895 года.", exception.getMessage());
     }
 }

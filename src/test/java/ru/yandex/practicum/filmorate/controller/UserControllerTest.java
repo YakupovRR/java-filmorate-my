@@ -28,7 +28,7 @@ class UserControllerTest {
     @DisplayName("id отрицательный")
     protected void validateIdTest() {
         user.setId(-1);
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateUser(user));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateUser(user));
         assertEquals("id не может быть отрицательным.", ex.getMessage());
     }
 
@@ -36,7 +36,7 @@ class UserControllerTest {
     @DisplayName("имя пустое")
     protected void validateNameTest() throws ValidationException {
         user.setName("");
-        controller.validateUser(user);
+        controller.validate.validateUser(user);
         assertEquals(user.getLogin(), user.getName());
     }
 
@@ -44,14 +44,14 @@ class UserControllerTest {
     @DisplayName("имя пустое (null)")
     protected void validateNameNullTest() throws ValidationException {
         user.setName(null);
-        controller.validateUser(user);
+        controller.validate.validateUser(user);
         assertEquals(user.getLogin(), user.getName());
     }
     @Test
     @DisplayName("почта пустая")
     protected void validateEmailNullTest() {
         user.setEmail(null);
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateUser(user));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateUser(user));
         assertEquals("Проверьте адрес электронной почты.", ex.getMessage());
     }
 
@@ -59,7 +59,7 @@ class UserControllerTest {
     @DisplayName("почта не содержит @")
     protected void validateEmailTest() {
         user.setEmail("mail.ru");
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateUser(user));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateUser(user));
         assertEquals("Проверьте адрес электронной почты.", ex.getMessage());;
     }
 
@@ -67,7 +67,7 @@ class UserControllerTest {
     @DisplayName("логин пустой")
     protected void validateLoginNullTest() {
         user.setLogin(null);
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateUser(user));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateUser(user));
         assertEquals("Логин не может содержать пробелы или быть пустым", ex.getMessage());
     }
 
@@ -75,7 +75,7 @@ class UserControllerTest {
     @DisplayName("логин содержит пробел")
     protected void validateLoginTest() {
         user.setLogin("dol ore");
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateUser(user));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateUser(user));
         assertEquals("Логин не может содержать пробелы или быть пустым", ex.getMessage());
     }
 
@@ -83,7 +83,7 @@ class UserControllerTest {
     @DisplayName("день рождение в будущем")
     protected void validateBirthdayTest() {
         user.setBirthday(LocalDate.now().plusYears(1));
-        Exception ex = assertThrows(ValidationException.class, () -> controller.validateUser(user));
+        Exception ex = assertThrows(ValidationException.class, () -> controller.validate.validateUser(user));
         assertEquals("Дата рождения не может быть в будущем.", ex.getMessage());
     }
 }
