@@ -1,36 +1,63 @@
 package ru.yandex.practicum.filmorate.validate;
 
-import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
 import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 
-
 @Slf4j
 public class ValidateFilm {
-    private static final LocalDate REFERENCE_DATE = LocalDate.of(1895,12,28);
 
-    public void validateFilm(Film film) throws ValidationException {
-        if (film.getName() == null || film.getName().isBlank()) {
-            log.debug("Название фильма не указано");
-            throw new ValidationException("Название фильма не указано.");
+    private Film film;
+    private static final LocalDate dateFirstFilm = LocalDate.of(1895, 12, 28);
+
+    private static final int maxLengthDescription = 200;
+
+    public ValidateFilm(Film film) {
+        this.film = film;
+    }
+
+    public boolean checkAllData() {
+        if(isCorrectName() && isCorrectLengthDescription() && isCorrectReleaseDate() && isPositiveDuration()) {
+            return true;
+        } else {
+            return false;
         }
-        if (film.getDescription().length() > 200) {
-            log.debug("Описание фильма больше 200 символов");
-            throw new ValidationException("Описание фильма не должно превышать 200 символов.");
+    }
+
+    private boolean isCorrectName() {
+        if(!film.getName().isBlank()) {
+            return true;
+        } else {
+            log.warn("Название фильма не указано");
+            return false;
         }
-        if (film.getReleaseDate().isBefore(REFERENCE_DATE)) {
-            log.debug("Дата релиза раньше 28 декабря 1895 года");
-            throw new ValidationException("Дата релиза не может быть раньше 28 декабря 1895 года.");
+    }
+
+    private boolean isCorrectLengthDescription() {
+        if(film.getDescription().length() <= maxLengthDescription) {
+            return true;
+        } else {
+            log.warn("Описание фильма не должно превышать" + maxLengthDescription + "символов.");
+            return false;
         }
-        if (film.getDuration() < 0) {
-            log.debug("Продолжительность фильма отрицательная");
-            throw new ValidationException("Продолжительность фильма не может быть отрицательной.");
+    }
+
+    private boolean isCorrectReleaseDate() {
+        if(film.getReleaseDate().isAfter(dateFirstFilm)) {
+            return true;
+        } else {
+            log.warn("Дата релиза не должена быть позже " + dateFirstFilm);
+            return false;
         }
-        if (film.getId() < 0) {
-            log.debug("id отрицателен");
-            throw new ValidationException("id не может быть отрицательным.");
+    }
+
+    private boolean isPositiveDuration() {
+        if(film.getDuration() > 0) {
+            return true;
+        } else {
+            log.warn("Продолжительность фильма должна быть больше 0.");
+            return false;
         }
     }
 }

@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.validate;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -9,25 +8,44 @@ import java.time.LocalDate;
 @Slf4j
 public class ValidateUser {
 
-    public void validateUser(User user) throws ValidationException {
-        if (user.getEmail() == null || !user.getEmail().contains("@")) {
-            log.debug("Адрес электронной почты пуст/не содержит @");
-            throw new ValidationException("Проверьте адрес электронной почты.");
+    private final User user;
+
+    public ValidateUser(User user) {
+        this.user = user;
+    }
+
+    public boolean checkAllData() {
+        if(isCorrectEmail() && isCorrectLogin() && isCorrectBirthday()) {
+            return true;
+        } else {
+            return false;
         }
-        if (user.getLogin() == null || user.getLogin().contains(" ")) {
-            log.debug("Логин содержит пробелы/пустой");
-            throw new ValidationException("Логин не может содержать пробелы или быть пустым");
+    }
+
+    private boolean isCorrectEmail() {
+        if(!user.getEmail().isEmpty() && user.getEmail().contains("@")) {
+            return true;
+        } else {
+            log.warn("Адрес электронной почты пуст/не содержит @");
+            return false;
         }
-        if (user.getName() == null || user.getName().equals("")) {
-            user.setName(user.getLogin());
+    }
+
+    private boolean isCorrectLogin() {
+        if(!user.getLogin().isEmpty() && !user.getLogin().contains(" ")) {
+            return true;
+        } else {
+            log.warn("Логин пустой или содержит пробелы");
+            return false;
         }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.debug("Дата рождения в будущем");
-            throw new ValidationException("Дата рождения не может быть в будущем.");
-        }
-        if (user.getId() < 0) {
-            log.debug("id отрицателен");
-            throw new ValidationException("id не может быть отрицательным.");
+    }
+
+    private boolean isCorrectBirthday() {
+        if(user.getBirthday().isBefore(LocalDate.now())) {
+            return true;
+        } else {
+            log.warn("Дата рождения не может быть в будующем");
+            return false;
         }
     }
 }
