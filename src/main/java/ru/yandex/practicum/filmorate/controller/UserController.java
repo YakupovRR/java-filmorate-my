@@ -19,11 +19,13 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final ValidateUser validateUser;
 
     private static int id = 0;
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ValidateUser validateUser) {
         this.userService = userService;
+        this.validateUser = validateUser;
     }
 
     @GetMapping("/users")
@@ -67,7 +69,7 @@ public class UserController {
         if(user.getFriends() == null) {
             user.setFriends(new HashSet<>());
         }
-        if(new ValidateUser(user).checkAllData()) {
+        if(validateUser.checkAllData(user)) {
             user.setId(getId());
             userService.addUser(user);
             return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -90,7 +92,7 @@ public class UserController {
         if(user.getName().isEmpty()) {
             user.setName(user.getEmail());
         }
-        if(new ValidateUser(user).checkAllData() && user.getId() > 0) {
+        if(validateUser.checkAllData(user) && user.getId() > 0) {
             userService.updateUser(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
@@ -114,22 +116,7 @@ public class UserController {
         userService.deleteFriend(id, friendId);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> handleIncorrectValidation(ValidationException e) {
-        log.warn("При обработке запроса возникло исключение: " + e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler
-    @ResponseBody
-    public ResponseEntity<String> handleException(Exception e) {
-        log.warn("При обработке запроса возникло исключение " + e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    @ExceptionHandler
-    public ResponseEntity<String> handleNotFoundException(InputDataException e) {
-        log.warn("При обработке запроса возникло исключение: " + e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-    }
+
 
     public int getId() {
         this.id++;

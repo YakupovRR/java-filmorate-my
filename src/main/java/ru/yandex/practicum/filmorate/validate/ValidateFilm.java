@@ -1,11 +1,13 @@
 package ru.yandex.practicum.filmorate.validate;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 
 @Slf4j
+@Component
 public class ValidateFilm {
 
     private Film film;
@@ -13,12 +15,13 @@ public class ValidateFilm {
 
     private static final int maxLengthDescription = 200;
 
-    public ValidateFilm(Film film) {
-        this.film = film;
+    public ValidateFilm() {
+
     }
 
-    public boolean checkAllData() {
-        if(isCorrectName() && isCorrectLengthDescription() && isCorrectReleaseDate() && isPositiveDuration()) {
+
+    public boolean checkAllData(Film film) {
+        if (isCorrectName() && isCorrectLengthDescription() && isCorrectReleaseDate() && isPositiveDuration()) {
             return true;
         } else {
             return false;
@@ -26,7 +29,7 @@ public class ValidateFilm {
     }
 
     private boolean isCorrectName() {
-        if(!film.getName().isBlank()) {
+        if (!film.getName().isBlank()) {
             return true;
         } else {
             log.warn("Название фильма не указано");
@@ -35,7 +38,7 @@ public class ValidateFilm {
     }
 
     private boolean isCorrectLengthDescription() {
-        if(film.getDescription().length() <= maxLengthDescription) {
+        if (film.getDescription().length() <= maxLengthDescription) {
             return true;
         } else {
             log.warn("Описание фильма не должно превышать" + maxLengthDescription + "символов.");
@@ -44,7 +47,7 @@ public class ValidateFilm {
     }
 
     private boolean isCorrectReleaseDate() {
-        if(film.getReleaseDate().isAfter(dateFirstFilm)) {
+        if (film.getReleaseDate().isAfter(dateFirstFilm)) {
             return true;
         } else {
             log.warn("Дата релиза не должена быть позже " + dateFirstFilm);
@@ -53,7 +56,7 @@ public class ValidateFilm {
     }
 
     private boolean isPositiveDuration() {
-        if(film.getDuration() > 0) {
+        if (film.getDuration() > 0) {
             return true;
         } else {
             log.warn("Продолжительность фильма должна быть больше 0.");

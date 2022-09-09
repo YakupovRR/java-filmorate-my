@@ -1,29 +1,28 @@
 package ru.yandex.practicum.filmorate.validate;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
 @Slf4j
+@Component
 public class ValidateUser {
+    public ValidateUser() {
 
-    private final User user;
-
-    public ValidateUser(User user) {
-        this.user = user;
     }
 
-    public boolean checkAllData() {
-        if(isCorrectEmail() && isCorrectLogin() && isCorrectBirthday()) {
+    public boolean checkAllData(User user) {
+        if (isCorrectEmail(user) && isCorrectLogin(user) && isCorrectBirthday(user)) {
             return true;
         } else {
             return false;
         }
     }
 
-    private boolean isCorrectEmail() {
-        if(!user.getEmail().isEmpty() && user.getEmail().contains("@")) {
+    private boolean isCorrectEmail(User user) {
+        if (!user.getEmail().isEmpty() && user.getEmail().contains("@")) {
             return true;
         } else {
             log.warn("Адрес электронной почты пуст/не содержит @");
@@ -31,8 +30,8 @@ public class ValidateUser {
         }
     }
 
-    private boolean isCorrectLogin() {
-        if(!user.getLogin().isEmpty() && !user.getLogin().contains(" ")) {
+    private boolean isCorrectLogin(User user) {
+        if (!user.getLogin().isEmpty() && !user.getLogin().contains(" ")) {
             return true;
         } else {
             log.warn("Логин пустой или содержит пробелы");
@@ -40,8 +39,8 @@ public class ValidateUser {
         }
     }
 
-    private boolean isCorrectBirthday() {
-        if(user.getBirthday().isBefore(LocalDate.now())) {
+    private boolean isCorrectBirthday(User user) {
+        if (user.getBirthday().isBefore(LocalDate.now())) {
             return true;
         } else {
             log.warn("Дата рождения не может быть в будующем");
