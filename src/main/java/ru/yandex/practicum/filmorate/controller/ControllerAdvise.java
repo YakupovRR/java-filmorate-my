@@ -6,7 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exception.InputDataException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+
+import javax.validation.ValidationException;
 
 @RestController
 @Slf4j
