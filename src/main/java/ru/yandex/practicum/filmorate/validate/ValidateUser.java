@@ -1,16 +1,16 @@
 package ru.yandex.practicum.filmorate.validate;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
 @Slf4j
-@Component
+@Service
 public class ValidateUser {
-    public ValidateUser() {
 
+    public ValidateUser() {
     }
 
     public boolean checkAllData(User user) {
@@ -25,7 +25,7 @@ public class ValidateUser {
         if (!user.getEmail().isEmpty() && user.getEmail().contains("@")) {
             return true;
         } else {
-            log.warn("Адрес электронной почты пуст/не содержит @");
+            log.warn("Ошибка во входных данных. Электронная почта пустая или не содержит @");
             return false;
         }
     }
@@ -34,7 +34,7 @@ public class ValidateUser {
         if (!user.getLogin().isEmpty() && !user.getLogin().contains(" ")) {
             return true;
         } else {
-            log.warn("Логин пустой или содержит пробелы");
+            log.warn("Ошибка во входных данных. Логин пустой или содержит пробелы");
             return false;
         }
     }
@@ -43,8 +43,9 @@ public class ValidateUser {
         if (user.getBirthday().isBefore(LocalDate.now())) {
             return true;
         } else {
-            log.warn("Дата рождения не может быть в будующем");
+            log.warn("Ошибка во входных данных. Дата рождения указана в будующем");
             return false;
         }
     }
 }
+

@@ -16,6 +16,8 @@ class ValidateUserTest {
             .birthday(LocalDate.of(1994, 10, 01))
             .build();
 
+
+
     @AfterEach
     public void user() {
         user = User.builder()
@@ -50,3 +52,4 @@ class ValidateUserTest {
     }
 
 }
+
