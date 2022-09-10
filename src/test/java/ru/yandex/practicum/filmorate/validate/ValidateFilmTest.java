@@ -3,16 +3,16 @@ package ru.yandex.practicum.filmorate.validate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-@Service
+@SpringBootTest
 class ValidateFilmTest {
-    private final ValidateFilm validateFilm;
+    private ValidateFilm validateFilm;
 
     static Film film = Film.builder()
             .id(1)

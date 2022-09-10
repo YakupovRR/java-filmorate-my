@@ -13,7 +13,7 @@ import ru.yandex.practicum.filmorate.validate.ValidateUser;
 import javax.validation.ValidationException;
 import java.util.HashSet;
 import java.util.List;
-//проба
+
 @RestController
 @Slf4j
 public class UserController {
@@ -119,25 +119,6 @@ public class UserController {
     public int getId() {
         this.id++;
         return id;
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<String> handleIncorrectValidation(ValidationException e) {
-        log.warn("При обработке запроса возникло исключение: " + e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    @ResponseBody
-    public ResponseEntity<String> handleException(Exception e) {
-        log.warn("При обработке запроса возникло исключение " + e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<String> handleNotFoundException(InputDataException e) {
-        log.warn("При обработке запроса возникло исключение: " + e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
 
