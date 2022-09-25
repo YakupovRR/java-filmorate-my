@@ -11,10 +11,11 @@ import java.time.LocalDate;
 public class ValidateUser {
 
     public ValidateUser() {
+
     }
 
     public boolean checkAllData(User user) {
-        if (isCorrectEmail(user) && isCorrectLogin(user) && isCorrectBirthday(user)) {
+        if(isCorrectEmail(user) && isCorrectLogin(user) && isCorrectBirthday(user)) {
             return true;
         } else {
             return false;
@@ -22,7 +23,7 @@ public class ValidateUser {
     }
 
     private boolean isCorrectEmail(User user) {
-        if (!user.getEmail().isEmpty() && user.getEmail().contains("@")) {
+        if(!user.getEmail().isEmpty() && user.getEmail().contains("@")) {
             return true;
         } else {
             log.warn("Ошибка во входных данных. Электронная почта пустая или не содержит @");
@@ -31,7 +32,7 @@ public class ValidateUser {
     }
 
     private boolean isCorrectLogin(User user) {
-        if (!user.getLogin().isEmpty() && !user.getLogin().contains(" ")) {
+        if(!user.getLogin().isEmpty() && !user.getLogin().contains(" ")) {
             return true;
         } else {
             log.warn("Ошибка во входных данных. Логин пустой или содержит пробелы");
@@ -40,7 +41,7 @@ public class ValidateUser {
     }
 
     private boolean isCorrectBirthday(User user) {
-        if (user.getBirthday().isBefore(LocalDate.now())) {
+        if(user.getBirthday().isBefore(LocalDate.now())) {
             return true;
         } else {
             log.warn("Ошибка во входных данных. Дата рождения указана в будующем");
@@ -48,4 +49,3 @@ public class ValidateUser {
         }
     }
 }
-

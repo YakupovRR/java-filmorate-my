@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.InputDataException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.validate.ValidateUser;
 
-import javax.validation.ValidationException;
 import java.util.HashSet;
 import java.util.List;
 
@@ -21,7 +21,8 @@ public class UserController {
     private final UserService userService;
     private final ValidateUser validateUser;
 
-    private static int id = 0;
+
+
     @Autowired
     public UserController(UserService userService, ValidateUser validateUser) {
         this.userService = userService;
@@ -60,7 +61,6 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    @ResponseBody
     public ResponseEntity<User> createUser(@RequestBody User user) {
         log.info("Получен запрос к эндпоинту: POST /users");
         if(user.getName().isEmpty()) {
@@ -70,16 +70,13 @@ public class UserController {
             user.setFriends(new HashSet<>());
         }
         if(validateUser.checkAllData(user)) {
-            user.setId(getId());
-            userService.addUser(user);
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            return new ResponseEntity<>(userService.addUser(user), HttpStatus.CREATED);
         } else {
             log.warn("Запрос к эндпоинту POST /users не обработан.");
             throw new ValidationException("Одно или несколько условий не выполняются");
         }
     }
     @PutMapping("/users")
-    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         log.info("Получен запрос к эндпоинту: PUT /users");
@@ -116,9 +113,4 @@ public class UserController {
         userService.deleteFriend(id, friendId);
     }
 
-    public int getId() {
-        this.id++;
-        return id;
-    }
 }
-
