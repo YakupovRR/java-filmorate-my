@@ -1,33 +1,51 @@
 package ru.yandex.practicum.filmorate.validate;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
 @Slf4j
+@Service
 public class ValidateUser {
 
-    public void validateUser(User user) throws ValidationException {
-        if (user.getEmail() == null || !user.getEmail().contains("@")) {
-            log.debug("Адрес электронной почты пуст/не содержит @");
-            throw new ValidationException("Проверьте адрес электронной почты.");
+    public ValidateUser() {
+    }
+
+    public boolean checkAllData(User user) {
+        if (isCorrectEmail(user) && isCorrectLogin(user) && isCorrectBirthday(user)) {
+            return true;
+        } else {
+            return false;
         }
-        if (user.getLogin() == null || user.getLogin().contains(" ")) {
-            log.debug("Логин содержит пробелы/пустой");
-            throw new ValidationException("Логин не может содержать пробелы или быть пустым");
+    }
+
+    private boolean isCorrectEmail(User user) {
+        if (!user.getEmail().isEmpty() && user.getEmail().contains("@")) {
+            return true;
+        } else {
+            log.warn("Ошибка во входных данных. Электронная почта пустая или не содержит @");
+            return false;
         }
-        if (user.getName() == null || user.getName().equals("")) {
-            user.setName(user.getLogin());
+    }
+
+    private boolean isCorrectLogin(User user) {
+        if (!user.getLogin().isEmpty() && !user.getLogin().contains(" ")) {
+            return true;
+        } else {
+            log.warn("Ошибка во входных данных. Логин пустой или содержит пробелы");
+            return false;
         }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.debug("Дата рождения в будущем");
-            throw new ValidationException("Дата рождения не может быть в будущем.");
-        }
-        if (user.getId() < 0) {
-            log.debug("id отрицателен");
-            throw new ValidationException("id не может быть отрицательным.");
+    }
+
+    private boolean isCorrectBirthday(User user) {
+        if (user.getBirthday().isBefore(LocalDate.now())) {
+            return true;
+        } else {
+            log.warn("Ошибка во входных данных. Дата рождения указана в будующем");
+            return false;
         }
     }
 }
+
