@@ -71,8 +71,8 @@ public class UserDbStorage implements UserStorage {
     public void addFriend(int id, int friendId) {
         String sql = "INSERT INTO friends(user1_id, user2_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, id, friendId);
-        String sqlFriends2 = "SELECT user2_id FROM friends WHERE USER1_ID = ?";
-        List<Integer> friends_userId2 = jdbcTemplate.queryForList(sqlFriends2, Integer.class, friendId);
+        // String sqlFriends2 = "SELECT user2_id FROM friends WHERE USER1_ID = ?";
+        // List<Integer> friends_userId2 = jdbcTemplate.queryForList(sqlFriends2, Integer.class, friendId);
     }
 
     @Override
@@ -85,9 +85,12 @@ public class UserDbStorage implements UserStorage {
     public List<User> mutualFriends(int id, int friendId) {
         String sql = "SELECT user2_id FROM friends WHERE user1_id = ?";
         List<Integer> friends_userId1 = jdbcTemplate.queryForList(sql, Integer.class, id);
+        log.info("friends_userId1 = {}", friends_userId1);
         String sql2 = "SELECT user1_id FROM friends WHERE user2_id = ?";
         List<Integer> friends_userId2 = jdbcTemplate.queryForList(sql2, Integer.class, friendId);
+        log.info("friends_userId2 = {}", friends_userId2);
         List<User> mutualFriends = findMutualUsersInTwoLists(friends_userId1, friends_userId2);
+        log.info("mutualFriends = {}", mutualFriends);
         return mutualFriends;
     }
 
