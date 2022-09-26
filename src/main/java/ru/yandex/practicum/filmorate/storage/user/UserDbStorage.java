@@ -73,7 +73,7 @@ public class UserDbStorage implements UserStorage {
         jdbcTemplate.update(sql, id, friendId);
 
         String sql2= "INSERT INTO friends(user2_id, user1_id) VALUES (?, ?)";
-        jdbcTemplate.update(sql2, friendId, id);
+        jdbcTemplate.update(sql2, id, friendId);
 //        String sqlFriends2 = "SELECT user2_id FROM friends WHERE USER1_ID = ?";
 //        List<Integer> friends_userId2 = jdbcTemplate.queryForList(sqlFriends2, Integer.class, friendId);
     }
