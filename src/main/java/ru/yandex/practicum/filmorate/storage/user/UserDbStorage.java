@@ -71,6 +71,8 @@ public class UserDbStorage implements UserStorage {
     public void addFriend(int id, int friendId) {
         String sql = "INSERT INTO friends(user1_id, user2_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, id, friendId);
+        String sqlFriends2 = "SELECT user2_id FROM friends WHERE USER1_ID = ?";
+        List<Integer> friends_userId2 = jdbcTemplate.queryForList(sqlFriends2, Integer.class, friendId);
     }
 
     @Override
@@ -81,19 +83,16 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> mutualFriends(int id, int friendId) {
-        String sql = "SELECT user2_id FROM friends WHERE user1_id = ?";
-        List<Integer> friends_userId1 = jdbcTemplate.queryForList(sql, Integer.class, id);
-        log.info("friends_userId1 = {}", friends_userId1);
-        String sql2 = "SELECT user1_id FROM friends WHERE user2_id = ?";
-        List<Integer> friends_userId2 = jdbcTemplate.queryForList(sql2, Integer.class, friendId);
-        log.info("friends_userId2 = {}", friends_userId2);
-        List<User> mutualFriends = findMutualUsersInTwoLists(friends_userId1, friends_userId2);
-        log.info("mutualFriends = {}", mutualFriends);
+        String sqlFriends1 = "SELECT user2_id FROM friends WHERE user1_id = ?";
+        List<Integer> friends_userId1 = jdbcTemplate.queryForList(sqlFriends1, Integer.class, id);
+        String sqlFriends2 = "SELECT user2_id FROM friends WHERE user1_id = ?";
+        List<Integer> friends_userId2 = jdbcTemplate.queryForList(sqlFriends2, Integer.class, friendId);
+        List<Integer> mutualFriendsId = findMutualIdInTwoLists(friends_userId1, friends_userId2);
+        List<User> mutualFriends = findMutualUsersInTwoLists(mutualFriendsId);
         return mutualFriends;
     }
 
-    private List<User> findMutualUsersInTwoLists(List<Integer> friends_userId1, List<Integer> friends_userId2) {
-        List<Integer> mutualFriendsId = findMutualIdInTwoLists(friends_userId1, friends_userId2);
+    public List<User> findMutualUsersInTwoLists(List<Integer> mutualFriendsId) {
         List<User> mutualFriends = new ArrayList<>();
         for (Integer mutualId : mutualFriendsId) {
             mutualFriends.add(getUserById(mutualId));
@@ -101,7 +100,8 @@ public class UserDbStorage implements UserStorage {
         return mutualFriends;
     }
 
-    private List<Integer> findMutualIdInTwoLists(List<Integer> friends_userId1, List<Integer> friends_userId2) {
+
+    public List<Integer> findMutualIdInTwoLists(List<Integer> friends_userId1, List<Integer> friends_userId2) {
         List<Integer> mutualFriendsId = new ArrayList<>();
         for (Integer idUser : friends_userId1) {
             if (friends_userId2.contains(idUser)) {
@@ -110,6 +110,7 @@ public class UserDbStorage implements UserStorage {
         }
         return mutualFriendsId;
     }
+
 
     @Override
     public List<User> getAllFriend(int id) {
