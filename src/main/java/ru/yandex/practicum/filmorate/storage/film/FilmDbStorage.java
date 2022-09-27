@@ -29,6 +29,7 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Film> findAllFilms() {
         String sql = "SELECT * FROM films";
+
         return jdbcTemplate.query(sql, DbStringMapping::mapRowToFilm);
     }
 
