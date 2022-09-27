@@ -4,9 +4,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component("genreDbStorage")
@@ -30,7 +32,22 @@ public class GenreDbStorage implements GenreStorage {
     @Override
     public List<Genre> findAllGenres() {
         String sql = "SELECT * FROM genres ORDER BY category_id";
-        return jdbcTemplate.query(sql, this::mapRowToGenre);
+
+        List<Genre> allGenre = new ArrayList<>(jdbcTemplate.query(sql, this::mapRowToGenre));
+        List<Genre> allGenreCleaned = new ArrayList<>();
+        for (Genre i : allGenre) {
+            String name = i.getName();
+            boolean notInClearnedList = true;
+            for (Genre j : allGenreCleaned) {
+                if (j.getName().equals(name)) {
+                    notInClearnedList = false;
+                }
+            }
+            if (notInClearnedList) {
+                allGenreCleaned.add(i);
+            }
+        }
+        return allGenreCleaned;
     }
 
     public Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException {
