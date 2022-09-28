@@ -7,6 +7,8 @@ import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.genre.GenreDbStorage;
+import ru.yandex.practicum.filmorate.storage.film.genre.InMemoryGenreStorage;
+import ru.yandex.practicum.filmorate.storage.film.ratingMpa.InMemoryRatingMpa;
 import ru.yandex.practicum.filmorate.storage.film.ratingMpa.RatingMpaDbStorage;
 import ru.yandex.practicum.filmorate.storage.film.ratingMpa.RatingMpaStorage;
 
@@ -17,10 +19,10 @@ import java.util.List;
 public class FilmService {
 
     private final InMemoryFilmStorage filmStorage;
-    private final GenreDbStorage genreStorage;
-    private final RatingMpaStorage ratingMpaStorage;
-    public FilmService(InMemoryFilmStorage fileStorage, GenreDbStorage genreStorage,
-                       RatingMpaDbStorage ratingMpaStorage) {
+    private final InMemoryGenreStorage genreStorage;
+    private final InMemoryRatingMpa ratingMpaStorage;
+    public FilmService(InMemoryFilmStorage fileStorage, InMemoryGenreStorage genreStorage,
+                       InMemoryRatingMpa ratingMpaStorage) {
         this.filmStorage = fileStorage;
         this.genreStorage = genreStorage;
         this.ratingMpaStorage =ratingMpaStorage;
