@@ -1,12 +1,15 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.InputDataException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.genre.GenreDbStorage;
+import ru.yandex.practicum.filmorate.storage.film.genre.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.film.genre.InMemoryGenreStorage;
 import ru.yandex.practicum.filmorate.storage.film.ratingMpa.InMemoryRatingMpa;
 import ru.yandex.practicum.filmorate.storage.film.ratingMpa.RatingMpaDbStorage;
@@ -18,11 +21,13 @@ import java.util.List;
 @Slf4j
 public class FilmService {
 
-    private final InMemoryFilmStorage filmStorage;
-    private final InMemoryGenreStorage genreStorage;
-    private final InMemoryRatingMpa ratingMpaStorage;
-    public FilmService(InMemoryFilmStorage fileStorage, InMemoryGenreStorage genreStorage,
-                       InMemoryRatingMpa ratingMpaStorage) {
+    private FilmStorage filmStorage;
+    private GenreStorage genreStorage;
+    private RatingMpaStorage ratingMpaStorage;
+    @Autowired
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage fileStorage, @Qualifier("genreDbStorage")
+    GenreStorage genreStorage,
+                       @Qualifier("ratingMpaDbStorage") RatingMpaStorage ratingMpaStorage) {
         this.filmStorage = fileStorage;
         this.genreStorage = genreStorage;
         this.ratingMpaStorage =ratingMpaStorage;
