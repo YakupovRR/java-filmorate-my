@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.InputDataException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.genre.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.film.ratingMpa.RatingMpaStorage;
 
@@ -15,7 +16,11 @@ import java.util.List;
 @Service
 @Slf4j
 public class FilmService {
+
     @Autowired
+    public FilmService(InMemoryFilmStorage fileStorage) {
+        this.filmStorage = fileStorage;
+    }
     @Qualifier("filmDbStorage")
     private FilmStorage filmStorage;
     @Autowired
