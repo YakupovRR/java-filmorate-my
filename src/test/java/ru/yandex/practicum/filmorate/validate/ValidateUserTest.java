@@ -14,7 +14,7 @@ class ValidateUserTest {
 
     private ValidateUser validateUser;
 
-    static User user = User.builder()
+    User user = User.builder()
             .name("name")
             .email("email@yandex.ru")
             .login("login")
